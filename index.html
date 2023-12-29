@@ -20,7 +20,7 @@
                     <th class="sort"  onclick="sortByBirthDate()">Birthday</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="data">
                 
             </tbody>
             <footer>
@@ -32,42 +32,66 @@
             </footer>
         </table>
     </div>
-    <!-- <script src="users.js"></script> -->
+    <script src="users.js"></script>
     <script>
         // Vous devez remplacer la fonction getUsers() par du code
+        let listUser = [];
+        const tableBody = document.getElementById("data");
+
         function getUsers() {
-            let data;
-            const fileReader = new XMLHttpRequest();
-            fileReader.open("GET", "users.js", false);
-            fileReader.onreadystatechange = function() {
-                if (fileReader.readyState === 4) {
-                    if (fileReader.status === 200 || fileReader.status == 0) {
-                        data = fileReader.responseText;
+            fetch('users.js')
+            .then(response => response.text())
+            .then(data => {
+                users.sort((a, b) => {
+                    if (order == 'asc') {
+                        return a[sortField] < b[sortField];
                     }
-                }
-            };
-            fileReader.send(null);
-            // return JSON.parse(data.replaceAll('const users = ', '')).users;
+                    else if (order == 'desc') {
+                        return b[sortField] > a[sortField];
+                    }
+                });
+                tableBody.innerHTML = '';
+                
+                users.map(user => {
+                    tableBody.innerHTML += `<tr>
+                                                <td></td>
+                                                <td>${ user.firstName }</td>
+                                                <td>${ user.lastName }</td>
+                                                <td>${ user.birthDate }</td>
+                                            </tr>`;
+                });
+            });
         }
 
-        // const users = getUsers();
-        getUsers();
-        console.log(users);
 
-        // qui sera exécuté directement.
-        // const mappedUsers = users.map();
         // Champs sur lequel le tri sera effectué
-        var sortField = 'fisrtName'
+        var sortField = 'firstName';
         // Ordre de tri 'asc ou 'desc'
-        var order = 'asc'
+        var order = 'asc';
         // Numéo de la page 
-        var currentPage = 1
+        var currentPage = 1;
         // Taille de la page
-        var pageSize = 10
-        function sortByFirtName(){}
-        function sortByLastName(){}
-        function sortByBirthDay(){}
+        var pageSize = 10;
 
+        function sortByFirtName(){
+            sortField = 'firstName';
+            asc = 'asc' ? 'desc' : 'asc';
+            getUsers();
+        }
+
+        function sortByLastName(){
+            sortField = 'lastName';
+            asc = 'asc' ? 'desc' : 'asc';
+            getUsers();
+        }
+
+        function sortByBirthDate(){
+            sortField = 'birthDate';
+            asc = 'asc' ? 'desc' : 'asc';
+            getUsers();
+        }
+
+        getUsers();
         
     </script>
 </div>
