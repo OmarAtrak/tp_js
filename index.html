@@ -44,21 +44,23 @@
             .then(data => {
                 users.sort((a, b) => {
                     if (order == 'asc') {
-                        return a[sortField] < b[sortField];
+                        return a[sortField].localeCompare(b[sortField]);
                     }
                     else if (order == 'desc') {
-                        return b[sortField] > a[sortField];
+                        return b[sortField].localeCompare(a[sortField]);
                     }
                 });
                 tableBody.innerHTML = '';
                 
                 users.map(user => {
-                    tableBody.innerHTML += `<tr>
-                                                <td></td>
-                                                <td>${ user.firstName }</td>
-                                                <td>${ user.lastName }</td>
-                                                <td>${ user.birthDate }</td>
-                                            </tr>`;
+                    if(user.id > ((currentPage * pageSize) - currentPage) && (user.id <= (currentPage * pageSize))) {
+                        tableBody.innerHTML += `<tr>
+                                                    <td></td>
+                                                    <td>${ user.firstName }</td>
+                                                    <td>${ user.lastName }</td>
+                                                    <td>${ user.birthDate }</td>
+                                                </tr>`;
+                    }
                 });
             });
         }
@@ -75,19 +77,19 @@
 
         function sortByFirtName(){
             sortField = 'firstName';
-            asc = 'asc' ? 'desc' : 'asc';
+            order = order == 'asc' ? 'desc' : 'asc';
             getUsers();
         }
 
         function sortByLastName(){
             sortField = 'lastName';
-            asc = 'asc' ? 'desc' : 'asc';
+            order = order == 'asc' ? 'desc' : 'asc';
             getUsers();
         }
 
         function sortByBirthDate(){
             sortField = 'birthDate';
-            asc = 'asc' ? 'desc' : 'asc';
+            order = order == 'asc' ? 'desc' : 'asc';
             getUsers();
         }
 
